@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CampaignStatus {
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+enum EventType {
+  CLICK
+  CONVERSION
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  name         String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  campaigns    Campaign[]
+
+  @@map("users")
+}
+
+model Campaign {
+  id            String         @id @default(uuid())
+  userId        String         @map("user_id")
+  name          String
+  description   String         @default("")
+  status        CampaignStatus @default(ACTIVE)
+  basePayout    Decimal        @default(0) @map("base_payout") @db.Decimal(10, 2)
+  referralToken String         @unique @map("referral_token")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events Event[]
+
+  @@index([userId])
+  @@map("campaigns")
+}
+
+model Event {
+  id          String    @id @default(uuid())
+  campaignId  String    @map("campaign_id")
+  type        EventType
+  ipHash      String?   @map("ip_hash")
+  userAgent   String?   @map("user_agent")
+  referenceId String?   @unique @map("reference_id")
+  metadata    Json?     @default("{}")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId])
+  @@index([type])
+  @@map("events")
+}
