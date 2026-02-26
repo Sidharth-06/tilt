@@ -15,21 +15,21 @@ export default function Sidebar() {
 
     const navItems = [
         { name: "Overview", path: "/dashboard", icon: "LayoutDashboard" },
-        { name: "Affiliates", path: "#", icon: "Users" }, // Represents Campaigns in our domain
-        { name: "Commissions", path: "#", icon: "Banknote" },
-        { name: "Payouts", path: "#", icon: "CreditCard" },
+        { name: "Affiliates", path: "/dashboard/affiliates", icon: "Users" },
+        { name: "Commissions", path: "/dashboard/commissions", icon: "Banknote" },
+        { name: "Payouts", path: "/dashboard/payouts", icon: "CreditCard" },
     ];
 
     const settingsItems = [
-        { name: "General Settings", path: "#", icon: "Settings" },
-        { name: "API Keys", path: "#", icon: "Key" },
+        { name: "General Settings", path: "/dashboard/settings", icon: "Settings" },
+        { name: "API Keys", path: "/dashboard/api-keys", icon: "Key" },
     ];
 
     const isActive = (path: string) => {
         if (path === "/dashboard") {
-            return pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+            return pathname === "/dashboard";
         }
-        return pathname === path;
+        return pathname.startsWith(path);
     };
 
     return (
