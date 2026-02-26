@@ -8,7 +8,7 @@ const envSchema = z.object({
     JWT_SECRET: z.string().min(8),
     PORT: z.coerce.number().default(4000),
     OPENROUTER_API_KEY: z.string().default(""),
-    FRONTEND_URL: z.string().url().default("http://localhost:3000"),
+    FRONTEND_URL: z.string().default("http://localhost:3000"),
 });
 
 export const config = envSchema.parse(process.env);
